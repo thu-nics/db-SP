@@ -3,7 +3,7 @@
 <!-- [![Paper](https://img.shields.io/badge/Paper-MLSys%202026-blue)](https://anonymous.4open.science/r/Dual-balance-3ECE)  
 [![Code](https://img.shields.io/badge/Code-Anonymous-important)](https://anonymous.4open.science/r/Dual-balance-3ECE) -->
 
-This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism technique designed to accelerate sparse attention in visual generative models (e.g., Diffusion Transformers).  
+This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism strategy designed to accelerate sparse attention in visual generative models (e.g., Diffusion Transformers).  
 By addressing workload imbalance at both the **head level** and **block level**, _db_-SP achieves significant speedups in both attention computation and end-to-end inference latency.
 
 ## 🚀 Overview
@@ -41,7 +41,7 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 		<td align="center" width="50%">
 			<figure>
 				<img src="assets/block-level.png" alt="Block-wise partitioning" style="width:100%; max-width:600px;" />
-				<figcaption><strong>block-wise partitioning</strong></figcaption>
+				<figcaption><strong>block-level partitioning</strong></figcaption>
 			</figure>
 		</td>
 	</tr>
