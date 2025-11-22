@@ -62,7 +62,7 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 - CUDA 12.1
 - NCCL 2.21.5
 
-### Repo dependencies
+### Repo dependencies (3rdparty)
 - PAROAttention
 - SpargeAttn
 
@@ -78,7 +78,7 @@ conda env create -f environment.yml
 ```py
 sparse, head_perm_idx, new_row_perm_idx, new_col_perm_idx, transpose_matrix_q, transpose_matrix_k, head_deperm_idx, new_row_deperm_idx, new_col_deperm_idx = hybrid_permute_v4(sparse,sp_ulysses_degree,sp_ring_degree,2)
 ```
-### Inference using dp-SP
+### Inference with dp-SP
 ```py
 usp_attn = LongContextAttention(
 	ring_impl_type="basic",
@@ -111,18 +111,22 @@ local_out = usp_attn(
 )
 ```
 
-### End-to-end test
+### Attention test
 ```bash
-cd para_customize
-torchrun --nproc_per_node=8 parallel_examples/run_wan_paro.py
-torchrun --nproc_per_node=8 parallel_examples/run_wan_sparge.py
-
-cd xdit-customize
-bash run_cogvideo.sh
-```
-
-## Attention test
-```bash
-cd usp_customize
 torchrun --nproc_per_node=8 ./test/test_hybrid_attn.py --sp_ulysses_degree 8 --ring_impl_type "basic" --attn_impl "paro"
 ```
+### End-to-end test (xDiT)
+- Customize different models to support extra input and output parameters. 
+- Change class xFuserLongContextAttention into LongContextAttention	and input the parameters.
+
+### End-to-end test (para)
+- Customize a new AttnProcessor2_0  to  replace the original one.
+- Customize transformer blocks and pipeline to support extra input and output parameters.
+- Change the original transformer blocks
+	```py
+	with UnifiedAttnMode(mesh):
+		hidden_states = self.call_transformer_blocks(
+			hidden_states, encoder_hidden_states, timestep_proj, rotary_emb
+		)
+	```
+	into new one and input the parameters.

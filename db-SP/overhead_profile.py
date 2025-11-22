@@ -138,4 +138,4 @@ with profile(
 
 print(q_reordered.shape)
 print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=20))
-prof.export_chrome_trace(f"overhead_profile/overhead_cogvideo_85k.json")  # 可选：导出火焰图
+prof.export_chrome_trace(f"overhead_profile/overhead_cogvideo_85k.json")
