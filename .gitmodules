@@ -1,15 +1,6 @@
-[submodule "PAROAtten"]
-	path = PAROAtten
+[submodule "3rdparty/PAROAtten"]
+	path = 3rdparty/PAROAtten
 	url = https://github.com/jamescsq47/PAROAtten.git
-[submodule "sparge_customize"]
-	path = sparge_customize
+[submodule "3rdparty/sparge_customize"]
+	path = 3rdparty/sparge_customize
 	url = https://github.com/jamescsq47/sparge_customize.git
-[submodule "usp_customize"]
-	path = usp_customize
-	url = https://github.com/jamescsq47/usp_customize.git
-[submodule "para_customize"]
-	path = para_customize
-	url = https://github.com/jamescsq47/para_customize.git
-[submodule "xdit-customize"]
-	path = xdit-customize
-	url = https://github.com/jamescsq47/xdit-customize.git
