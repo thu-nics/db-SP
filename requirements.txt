@@ -1,0 +1,8 @@
+transformers>=4.30.0
+accelerate
+scipy
+pandas
+scikit-learn
+tqdm
+matplotlib
+tensorboard

@@ -1,14 +1,15 @@
 # _db_-SP: Dual-Balanced Sequence Parallelism for Sparse Attention in Visual Generative Models
 
-<!-- [![Paper](https://img.shields.io/badge/Paper-MLSys%202026-blue)](https://anonymous.4open.science/r/Dual-balance-3ECE)  
-[![Code](https://img.shields.io/badge/Code-Anonymous-important)](https://anonymous.4open.science/r/Dual-balance-3ECE) -->
+[![Paper](https://img.shields.io/badge/Paper-Arxiv-blue)](https://arxiv.org/abs/2511.23113)
+[![Code](https://img.shields.io/badge/Code-GitHub-181717?logo=github&logoColor=white)](https://github.com/thu-nics/db-SP)
 
-This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism strategy designed to accelerate sparse attention in visual generative models (e.g., Diffusion Transformers).  
+This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism strategy designed to accelerate the inference of sparse attention in visual generative models (e.g., Diffusion Transformers).  The repository is forked from [USP](https://github.com/feifeibear/long-context-attention).
+
 By addressing workload imbalance at both the **head level** and **block level**, _db_-SP achieves significant speedups in both attention computation and end-to-end inference latency.
 
 ## 🚀 Overview
 ![Demo](assets/overview.png)
-Visual generative models like Diffusion Transformers (DiTs) rely heavily on self-attention, which becomes a bottleneck due to its quadratic complexity. While block-wise sparse attention reduces computation, existing sequence parallelism methods (e.g., Ulysses, Ring Attention) suffer from severe workload imbalance when applied to sparse masks.
+Visual generative models like Diffusion Transformers (DiTs) rely heavily on self-attention, which becomes a bottleneck due to its quadratic complexity. While block level sparse attention reduces computation, existing sequence parallelism methods (e.g., Ulysses, Ring Attention) suffer from severe workload imbalance when applied to sparse attention.
 
 **_db_-SP** introduces:
 - A **dual-balanced partitioning** method that balances workload across GPUs at both head and block levels
@@ -16,8 +17,8 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 - Minimal overhead through **partitioning reuse** and **biased greedy algorithms**
 
 ### Key Results
-- **1.25×** end-to-end speedup  
-- **1.40×** attention speedup  
+- **1.25×** end-to-end speedup on average  
+- **1.40×** attention speedup on average  
 - Near-perfect workload balance with **<5% overhead**
 ![Demo](assets/results.png)
 
@@ -27,8 +28,8 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 - Define a sparse imbalance ratio \( $ρ_s$ \) to quantify the workload imbalance
 
 ### Dual-Balanced Partitioning
-- **Head-Level**: Greedy assignment of attention heads to GPUs based on dense block counts
-- **Block-Level**: Biased greedy partitioning of Q/K/V chunks with reward factor \( $R_b$ \) to minimize inter-GPU communication
+- **Head Level**: Greedy assignment of attention heads to GPUs based on dense block counts
+- **Block Level**: Biased greedy partitioning of Q/K/V chunks with reward factor \( $R_b$ \) to minimize inter-GPU communication
 <!-- 并列显示两张示意图：每列占一半宽度，使用 figure + figcaption 添加注释 -->
 <table>
 	<tr>
@@ -49,11 +50,10 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 
 ### Sparsity-Aware Strategy Selection
 - Dynamically predicts the optimal parallel strategy (Ulysses, Ring Attention, or hybrid) per layer using a formula
-- Pre-builds communication groups to eliminate runtime overhead
 
 ### Overhead Mitigation
 - Reuses partitioning plans across denoising steps via similarity threshold \( $P_s$ \)
-- Overlaps communication with computation to hide latency
+- Overlaps communication with computation to reduce latency
 
 ## 📦 Installation
 ### Dependencies
@@ -69,8 +69,8 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 
 ### Install from Source
 ```bash
-cd Dual-balance
-conda env create -f environment.yml
+conda env create -f environment.yaml
+conda activate db-sp
 ```
 
 ## ⚙️ Usage
@@ -130,3 +130,16 @@ torchrun --nproc_per_node=8 ./test/test_hybrid_attn.py --sp_ulysses_degree 8 --r
 		)
 	```
 	into new one and input the parameters.
+
+## 📚 Citation
+```bash
+@misc{chen2025dbspacceleratingsparseattention,
+      title={db-SP: Accelerating Sparse Attention for Visual Generative Models with Dual-Balanced Sequence Parallelism}, 
+      author={Siqi Chen and Ke Hong and Tianchen Zhao and Ruiqi Xie and Zhenhua Zhu and Xudong Zhang and Yu Wang},
+      year={2025},
+      eprint={2511.23113},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2511.23113}, 
+}
+```
