@@ -3,13 +3,13 @@
 [![Paper](https://img.shields.io/badge/Paper-Arxiv-blue)](https://arxiv.org/abs/2511.23113)
 [![Code](https://img.shields.io/badge/Code-GitHub-181717?logo=github&logoColor=white)](https://github.com/thu-nics/db-SP)
 
-This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism strategy designed to accelerate the inference of sparse attention in visual generative models (e.g., Diffusion Transformers).  The repository is forked from [USP](https://github.com/feifeibear/long-context-attention).
+This repository contains the official implementation of **_db_-SP**, a sparsity-aware sequence parallelism strategy designed to accelerate the inference of sparse attention in visual generative models (e.g., Diffusion Transformers).  The repository is based on a fork from [USP](https://github.com/feifeibear/long-context-attention).
 
-By addressing workload imbalance at both the **head level** and **block level**, _db_-SP achieves significant speedups in both attention computation and end-to-end inference latency.
+By addressing workload imbalance at both the **head level** and **block level**, _db_-SP achieves significant speedup in both attention computation and end-to-end inference latency.
 
 ## 🚀 Overview
 ![Demo](assets/overview.png)
-Visual generative models like Diffusion Transformers (DiTs) rely heavily on self-attention, which becomes a bottleneck due to its quadratic complexity. While block level sparse attention reduces computation, existing sequence parallelism methods (e.g., Ulysses, Ring Attention) suffer from severe workload imbalance when applied to sparse attention.
+Visual generative models like Diffusion Transformers (DiTs) rely heavily on self-attention, which becomes a bottleneck due to its quadratic complexity. While block-level sparse attention reduces computation, existing sequence parallelism methods (e.g., Ulysses, Ring Attention) suffer from severe workload imbalance when applied to sparse attention.
 
 **_db_-SP** introduces:
 - A **dual-balanced partitioning** method that balances workload across GPUs at both head and block levels
@@ -49,7 +49,7 @@ Visual generative models like Diffusion Transformers (DiTs) rely heavily on self
 </table>
 
 ### Sparsity-Aware Strategy Selection
-- Dynamically predicts the optimal parallel strategy (Ulysses, Ring Attention, or hybrid) per layer using a formula
+- Dynamically predicts the optimal parallel strategy (Ulysses, Ring Attention, or hybrid) using a formula
 
 ### Overhead Mitigation
 - Reuses partitioning plans across denoising steps via similarity threshold \( $P_s$ \)
@@ -74,11 +74,11 @@ conda activate db-sp
 ```
 
 ## ⚙️ Usage
-### Genearte partitioning plans
+### Generate partitioning plans
 ```py
 sparse, head_perm_idx, new_row_perm_idx, new_col_perm_idx, transpose_matrix_q, transpose_matrix_k, head_deperm_idx, new_row_deperm_idx, new_col_deperm_idx = hybrid_permute_v4(sparse,sp_ulysses_degree,sp_ring_degree,2)
 ```
-### Inference with dp-SP
+### Inference with db-SP
 ```py
 usp_attn = LongContextAttention(
 	ring_impl_type="basic",
@@ -115,11 +115,11 @@ local_out = usp_attn(
 ```bash
 torchrun --nproc_per_node=8 ./test/test_hybrid_attn.py --sp_ulysses_degree 8 --ring_impl_type "basic" --attn_impl "paro"
 ```
-### End-to-end test (xDiT)
+### End-to-end test ([xDiT](https://github.com/xdit-project/xDiT))
 - Customize different models to support extra input and output parameters. 
 - Change class xFuserLongContextAttention into LongContextAttention	and input the parameters.
 
-### End-to-end test (para)
+### End-to-end test ([ParaAttention](https://github.com/chengzeyi/ParaAttention))
 - Customize a new AttnProcessor2_0  to  replace the original one.
 - Customize transformer blocks and pipeline to support extra input and output parameters.
 - Change the original transformer blocks
