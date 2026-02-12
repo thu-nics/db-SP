@@ -4,3 +4,9 @@
 [submodule "3rdparty/sparge_customize"]
 	path = 3rdparty/sparge_customize
 	url = git@github.com:jamescsq47/sparge_customize.git
+[submodule "3rdparty/xdit-customize"]
+	path = 3rdparty/xdit-customize
+	url = https://github.com/jamescsq47/xdit-customize.git
+[submodule "3rdparty/para_customize"]
+	path = 3rdparty/para_customize
+	url = https://github.com/jamescsq47/para_customize.git
