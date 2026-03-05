@@ -433,9 +433,7 @@ def main():
     num_layers = sparse.shape[0]
     if rank == 0:
         print(f"Loaded sparse mask with shape {sparse.shape}, num_layers={num_layers}")
-        if args.simulate:
-            print(f"Simulating {selector.world_size} GPUs (actual {actual_world_size} GPU)")
-
+        
     # 逐层处理
     for layer_idx in range(num_layers):
         layer_mask = sparse[layer_idx]
@@ -446,7 +444,7 @@ def main():
             nonzero = layer_mask.sum().item()
             density = nonzero / total
             mode = "simulated" if args.simulate else "actual"
-            print(f"Layer {layer_idx:2d}: sparsity={density:.4f}, selected U{x}R{y} ({mode} {selector.world_size} GPUs)")
+            print(f"Layer {layer_idx:2d}: sparsity={density:.4f}, selected U{x}R{y}")
 
     if not args.simulate:
         dist.destroy_process_group()

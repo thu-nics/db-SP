@@ -36,6 +36,9 @@ Please download Wan2.1-T2V-14B-Diffusers and CogVideoX1.5-5B for end-to-end test
 Please download sparse masks from https://cloud.tsinghua.edu.cn/d/458ccdacdf9c4edf8548/ which is necessary for PAROAttention.
 
 ## End-to-end test(Wan)
+
+To get the result of each setting you can run the following commands:
+
 For baseline with PAROAttention: 
 ```bash
 cd db-SP
@@ -69,13 +72,13 @@ torchrun --nproc_per_node=8 parallel_examples/run_wan_sparge.py --sp_ulysses_deg
 
 You can use different sparse_mask which have different sparsity provided to do the experiments. Also you can set ```--nproc_per_node=8 ```for experiments with 8 GPUs or ```--nproc_per_node=4 ```for experiments with 4 GPUs. Note that sp_ulysses_degree × sp_ring_degree should equal to nproc_per_node.
 
-For convenience, you can simply run
+For AE, you can simply run
 ```bash
 cd db-SP
 cd 3rdparty/para_customize
 bash parallel_examples/ae.sh
 ```
-to conduct all the experiments, the results will be recorded at ./run_time_log.txt.
+to conduct all the experiments and get the overall results.
 
 ## End-to-end test(CogvideoX)
 For baseline with PAROAttention: 
@@ -108,13 +111,13 @@ bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus
 
 You can use different sparse_mask which have different sparsity provided to do the experiments. 
 
-For convenience, you can simply run
+For AE, you can simply run
 ```bash
 cd db-SP
 cd 3rdparty/xdit-customize
 bash examples/ae.sh
 ```
-to conduct all the experiments, the results will be recorded at ./run_time_log.txt.
+to conduct all the experiments and get the overall results.
 
 ## Sparsity-Aware Parallel Strategy Selection
 To present the result of Sparsity-Aware Parallel Strategy Selection more directly, we use a simulator to showcase the result:
@@ -130,3 +133,7 @@ associated overhead.
 cd db-SP/db-SP
 python tradeoff_reward.py
 ``` 
+
+
+## Contact us
+If you have any problems during artifact evaluation, please feel free to contact us by email: chensq23@mails.tsinghua.edu.cn
