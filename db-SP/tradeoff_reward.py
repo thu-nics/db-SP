@@ -710,8 +710,8 @@ def hybrid_permute_v4(
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-sparse_data = torch.load("/root/chensiqi/sparse_expanded.pth", map_location='cpu', weights_only=True)
-sparse = sparse_data['sparse'][0, :, :, :, :].to(device)  # [40, 40, 1182, 1182] 0.414
+sparse_data = torch.load("/mnt/public/chensiqi/wan_sparse_mask1.pt", map_location='cpu', weights_only=True)
+sparse = sparse_data.to(device)  # [40, 40, 1182, 1182] 0.414
 print(sparse.shape)
 H, W = sparse.shape[-2], sparse.shape[-1]
 pad_h = (8 - H % 8) if H % 8 != 0 else 0
@@ -723,11 +723,36 @@ if pad_h != 0 or pad_w != 0:
 ulysses_degree = 4
 ring_degree = 2
 
+# 创建字典来记录每个reward的所有block数据
+reward_results = {0: [], 1: [], 2: [], 5: [], 7: [], 10: []}
+
 for block in range(40):
-    print("-------------------")
+    # print("-------------------")
     sparse_piece = sparse[block,:,:,:]
 
-    for reward in [0, 1, 2, 5, 7,10]:
-        sparse_final4, _, _, _, transpose_matrix_q1, _, _, _, _ = hybrid_permute_v4(sparse_piece, ulysses_degree=ulysses_degree, ring_degree=ring_degree,reward=reward)
-        # total_transpose_count += transpose_matrix_q1[0].sum()-transpose_matrix_q1[0][0]
-        print(f"reward {reward}: v4 transpose count: {transpose_matrix_q1[0].sum()-transpose_matrix_q1[0][0]}, {(transpose_matrix_q1[0].sum()-transpose_matrix_q1[0][0])/ (transpose_matrix_q1[0].sum())},{hybrid_imbalance_ratio(sparse_final4,ulysses_degree,ring_degree)}")
+    for reward in [0, 1, 2, 5, 7, 10]:
+        sparse_final4, _, _, _, transpose_matrix_q1, _, _, _, _ = hybrid_permute_v4(sparse_piece, ulysses_degree=ulysses_degree, ring_degree=ring_degree, reward=reward)
+        
+        transpose_count = transpose_matrix_q1[0].sum() - transpose_matrix_q1[0][0]
+        data_exchange_ratio = (transpose_count / (transpose_matrix_q1[0].sum())) if transpose_matrix_q1[0].sum() > 0 else 0
+        imbalance = hybrid_imbalance_ratio(sparse_final4, ulysses_degree, ring_degree)
+        
+        # 保存结果
+        reward_results[reward].append({
+            'transpose_count': transpose_count.item(),
+            'data_exchange_ratio': data_exchange_ratio,
+            'imbalance_ratio': imbalance
+        })
+        
+        # print(f"reward {reward}: v4 transpose count: {transpose_count}, data exchange ratio: {data_exchange_ratio:.4f}, imbalance ratio after partitioning: {imbalance:.4f}")
+
+# 计算平均值并打印
+print("\n" + "="*80)
+print("average results across 40 blocks:")
+print("="*80)
+for reward in [0, 1, 2, 5, 7, 10]:
+    avg_transpose = sum(r['transpose_count'] for r in reward_results[reward]) / len(reward_results[reward])
+    avg_ratio = sum(r['data_exchange_ratio'] for r in reward_results[reward]) / len(reward_results[reward])
+    avg_imbalance = sum(r['imbalance_ratio'] for r in reward_results[reward]) / len(reward_results[reward])
+    
+    print(f"reward {reward:2d}: avg transpose count: {avg_transpose:8.2f}, avg data exchange ratio: {avg_ratio:.4f}, avg imbalance ratio: {avg_imbalance:.4f}")
