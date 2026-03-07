@@ -868,15 +868,14 @@ if __name__ == "__main__":
         requires_grad=True if use_bwd else False,
     )
 
-    sparse_data = torch.load("/mnt/public/ns-t-te-b905754427352261-427-bk/fs/home/xieruiqi/diffuser-dev520/examples/wan/logs/calib_data/rebuttal_720p/sparse_expanded.pth", map_location='cpu', weights_only=True) # 0.4141
-    # sparse_data = torch.load("/mnt/public/ns-t-te-b905754427352261-427-bk/fs/home/xieruiqi/diffuser-dev520/examples/wan/logs/calib_data/720p/sparse_plan_expanded.pth", map_location='cpu', weights_only=True) # 0.61
-    sparse = sparse_data['sparse'][0].cuda()  # [40, 40, 1182, 1182]
+    sparse_data = torch.load("/mnt/public/chensiqi/wan_sparse_mask1.pt", map_location='cpu', weights_only=True) # 0.4141
+    sparse = sparse_data.cuda()  # [40, 40, 1182, 1182]
     H, W = sparse.shape[-2], sparse.shape[-1]
     pad_h = (8 - H % 8) if H % 8 != 0 else 0
     pad_w = (8 - W % 8) if W % 8 != 0 else 0
     if pad_h != 0 or pad_w != 0:
         sparse = torch.nn.functional.pad(sparse, (0, pad_w, 0, pad_h), "constant", 0)
-    sparse=sparse[10].unsqueeze(0).transpose(1, 2).to(device).contiguous()  # [1, 40, H, W]
+    sparse=sparse[18].unsqueeze(0).transpose(1, 2).to(device).contiguous()  # [1, 40, H, W]
 
     # head-wise
     # sparse_ratio = 1
@@ -927,17 +926,6 @@ if __name__ == "__main__":
     #             end_w = (j + 1) * block_w
     #             sparse[:, :, start_h:end_h, start_w:end_w] = True
                 
-
-    # sparse = sparse.transpose(1, 2).contiguous()  #[1, 1184, 40, 1184]
-    # mask = sparse[0, 0].cpu().numpy()  
-    # plt.figure(figsize=(8, 8))
-    # plt.imshow(mask, cmap='gray', aspect='auto')
-    # plt.title('sparse mask')
-    # plt.xlabel('Key position')
-    # plt.ylabel('Query position')
-    # plt.colorbar(label='Mask (True=1, False=0)')
-    # plt.savefig('/mnt/public/chensiqi/long-context-attention-main/profile/wan/sparse_chess.png')
-
     head_perm_idx =None
     head_deperm_idx =None
     new_row_perm_idx =None
@@ -1404,6 +1392,6 @@ if __name__ == "__main__":
 
     if rank == 1 :
         print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=20))
-        prof.export_chrome_trace(f"profile/wan/profile_rank{rank}_ulysses{sp_ulysses_degree}ring{sp_ring_degree}_ablation_all.json")  # 可选：导出火焰图
+        prof.export_chrome_trace(f"./profile_rank{rank}_ulysses{sp_ulysses_degree}ring{sp_ring_degree}_ablation_all.json")  # 可选：导出火焰图
 
 

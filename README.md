@@ -5,8 +5,9 @@
 
 This repository is uesd for the artifact evaluation for the paper _db_-SP: Dual-Balanced Sequence Parallelism for Sparse Attention in Visual Generative Models
 
+## GPU resources
+Please contact xxx to get the access to the GPU resources.
 
-## 📦 Installation
 ### Dependencies
 - Python 3.8
 - PyTorch 2.5.1
@@ -35,9 +36,17 @@ Please download Wan2.1-T2V-14B-Diffusers and CogVideoX1.5-5B for end-to-end test
 
 Please download sparse masks from https://cloud.tsinghua.edu.cn/d/458ccdacdf9c4edf8548/ which is necessary for PAROAttention.
 
+## Attention 
+To acquire the result of attention, run the following commands: 
+```bash
+cd db-SP
+bash test/ae.sh
+```
+The results will be saved to ./attention_speedup_ulysses.csv and ./attention_ring_ulysses.csv.
+
 ## End-to-end test(Wan)
 
-To get the result of each setting you can run the following commands:
+To get the end-to-end result of each setting you can run the following commands:
 
 For baseline with PAROAttention: 
 ```bash
@@ -127,13 +136,19 @@ python selector.py --simulate --n_gpu 8
 ```
 
 ## Trade-off analysis
-To quantify the effect of the reward factor Rb choice, as depicted in Fig. 12. A trade-off exists between the sparse imbalance ratio and the
-associated overhead.
+To quantify the effect of the reward factor Rb choice, as depicted in Fig. 12. A trade-off exists between the sparse imbalance ratio and the associated overhead.
 ```bash
 cd db-SP/db-SP
 python tradeoff_reward.py
 ``` 
 
+To quantify the effect of using different reusing threshold Ps on the sparse imbalance ratio and the times of new plan generation shown in Fig. 11, run the commands below: 
+```bash
+cd db-SP
+cd 3rdparty/para_customize
+bash parallel_examples/ae.sh
+```
+
 
 ## Contact us
-If you have any problems during artifact evaluation, please feel free to contact us by email: chensq23@mails.tsinghua.edu.cn
+If you have any problems during artifacts evaluation, please feel free to contact us by email: chensq23@mails.tsinghua.edu.cn
