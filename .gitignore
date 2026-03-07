@@ -3,4 +3,5 @@
 *.json
 *.pth
 *.pt
+*.csv
 sparse_expanded.pth
