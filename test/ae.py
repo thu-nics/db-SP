@@ -521,7 +521,7 @@ if __name__ == "__main__":
         requires_grad=True if use_bwd else False,
     )
 
-    sparse_data = torch.load("/mnt/public/chensiqi/wan_sparse_mask2.pt", map_location='cpu', weights_only=True) # 0.4141
+    sparse_data = torch.load("/mnt/public/chensiqi/wan_sparse_mask1.pt", map_location='cpu', weights_only=True) # 0.4141
     sparse = sparse_data.cuda()  # [40, 40, 1182, 1182]
     H, W = sparse.shape[-2], sparse.shape[-1]
     pad_h = (8 - H % 8) if H % 8 != 0 else 0

@@ -87,7 +87,7 @@ cd db-SP
 cd 3rdparty/para_customize
 bash parallel_examples/ae.sh
 ```
-to conduct all the experiments and get the overall results.
+to conduct all the experiments and get the overall results. The results will be saved to ./sparge.csv, ./sparge.csv, and ```./sparge.csv```.
 
 ## End-to-end test(CogvideoX)
 For baseline with PAROAttention: 
