@@ -2,6 +2,25 @@ import os
 import torch
 import torch.distributed as dist
 from typing import Dict, List, Tuple, Optional, Union
+# 在main函数最后添加这部分代码
+from collections import Counter
+
+def print_strategy_statistics(strategy_counts, num_layers, mode="simulated"):
+    print("\n" + "="*50)
+    print(f"Strategy Selection Statistics")
+    print("="*50)
+    
+    # 按策略名称排序输出
+    sorted_strategies = sorted(strategy_counts.items())
+    
+    for (x, y), count in sorted_strategies:
+        percentage = (count / num_layers) * 100
+        strategy_name = f"U{x}R{y}"
+        bar_length = int(percentage / 2)  # 每2%显示一个字符
+        bar = "█" * bar_length
+        print(f"{strategy_name:8s}: {count:3d} layers ({percentage:5.2f}%) {bar}")
+    
+    print("="*50)
 
 def hybrid_permute_v4(
     sparse: torch.Tensor,
@@ -386,7 +405,6 @@ class SparsityAwareParallelSelector:
 
     def get_pg_for_strategy(self, x: int, y: int) -> Tuple[Optional[object], Optional[object]]:
         return self.pg_map.get((x, y), (None, None))
-
 def main():
     import argparse
     parser = argparse.ArgumentParser()
@@ -423,7 +441,7 @@ def main():
         simulate_n_gpu=simulate_n_gpu
     )
 
-    sparse_path = "/mnt/public/chensiqi/wan_sparse_mask1.pt"
+    sparse_path = "/mnt/public/chensiqi/wan_sparse_mask2.pt"
     sparse = torch.load(sparse_path)
     H, W = sparse.shape[-2], sparse.shape[-1]
     pad_h = (simulate_n_gpu - H % simulate_n_gpu) if H % simulate_n_gpu != 0 else 0
@@ -433,11 +451,17 @@ def main():
     num_layers = sparse.shape[0]
     if rank == 0:
         print(f"Loaded sparse mask with shape {sparse.shape}, num_layers={num_layers}")
-        
+    
+    # 添加计数器
+    strategy_counter = Counter()
+    
     # 逐层处理
     for layer_idx in range(num_layers):
         layer_mask = sparse[layer_idx]
         x, y = selector.select_strategy(layer_mask)
+        
+        # 记录策略选择
+        strategy_counter[(x, y)] += 1
 
         if rank == 0:
             total = layer_mask.numel()
@@ -445,6 +469,19 @@ def main():
             density = nonzero / total
             mode = "simulated" if args.simulate else "actual"
             print(f"Layer {layer_idx:2d}: sparsity={density:.4f}, selected U{x}R{y}")
+
+    # 在rank 0上打印统计信息
+    if rank == 0:
+        print_strategy_statistics(strategy_counter, num_layers, "simulated" if args.simulate else "actual")
+        
+        # 可选：将统计信息保存到文件
+        with open("strategy_statistics.txt", "w") as f:
+            f.write(f"Strategy Selection Statistics ({'simulated' if args.simulate else 'actual'} mode)\n")
+            f.write(f"Total layers: {num_layers}\n")
+            f.write("-" * 50 + "\n")
+            for (x, y), count in sorted(strategy_counter.items()):
+                percentage = (count / num_layers) * 100
+                f.write(f"U{x}R{y}: {count} layers ({percentage:.2f}%)\n")
 
     if not args.simulate:
         dist.destroy_process_group()

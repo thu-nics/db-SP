@@ -115,7 +115,7 @@ For db-SP with SpargeAttention:
 ```bash
 cd db-SP
 cd 3rdparty/xdit-customize
-bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus 8 --ulysses_degree 8 --ring_degree 1 --thereshold 1.05 --use_db_sp
+bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus 8 --ulysses_degree 8 --ring_degree 1 --thereshold 1.0 --use_db_sp
 ```
 
 You can use different sparse_mask which have different sparsity provided to do the experiments. 
@@ -129,9 +129,13 @@ bash examples/ae.sh
 to conduct all the experiments and get the overall results.
 
 ## Sparsity-Aware Parallel Strategy Selection
-To present the result of Sparsity-Aware Parallel Strategy Selection more directly, we use a simulator to showcase the result:
+To get the result of Sparsity-Aware Parallel Strategy Selection, you can run the code below:
 ```bash
 cd db-SP/db-SP
+torchrun --nproc_per_node=8 selector.py
+```
+If the GPU is limited, you can also run the simulation version with a single GPU by:
+```bash
 python selector.py --simulate --n_gpu 8
 ```
 
