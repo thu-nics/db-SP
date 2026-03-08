@@ -6,22 +6,22 @@
 This repository is uesd for the artifact evaluation for the paper _db_-SP: Dual-Balanced Sequence Parallelism for Sparse Attention in Visual Generative Models
 
 ## GPU resources
-Please contact xxx to get the access to the GPU resources.
+We will provide the required GPU for AE, please contact chensq23@mails.tsinghua.edu.cn to get the access to the GPU resources.
 
-### Dependencies
+## Dependencies
 - Python 3.8
 - PyTorch 2.5.1
 - CUDA 12.1
 - NCCL 2.21.5
 
-### Repo dependencies (3rdparty)
+## Repo dependencies (3rdparty)
 - PAROAttention
 - SpargeAttn
 - ParaAttention
 - xDiT
 
 
-### Install from Source
+## Install from Source
 ```bash
 git clone -b AE https://github.com/thu-nics/db-SP.git
 cd db-SP
@@ -31,7 +31,7 @@ conda env create -f environment.yaml
 conda activate db-sp
 ```
 
-### Other preparation
+## Other preparation
 Please download Wan2.1-T2V-14B-Diffusers and CogVideoX1.5-5B for end-to-end test.
 
 Please download sparse masks from https://cloud.tsinghua.edu.cn/d/458ccdacdf9c4edf8548/ which is necessary for PAROAttention.
