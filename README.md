@@ -27,7 +27,7 @@ git clone -b AE https://github.com/thu-nics/db-SP.git
 cd db-SP
 git submodule init
 git submodule update
-conda env create -f environment.yaml #FIX
+conda env create -f environment.yaml 
 conda activate db-sp
 ```
 
@@ -37,7 +37,7 @@ Please download Wan2.1-T2V-14B-Diffusers and CogVideoX1.5-5B for end-to-end test
 Please download sparse masks from https://cloud.tsinghua.edu.cn/d/458ccdacdf9c4edf8548/ which is necessary for PAROAttention.
 
 ## Attention 
-To acquire the result of attention, run the following commands: 
+To get uire the result of attention, run the following commands: 
 ```bash
 cd db-SP
 bash test/ae.sh
@@ -87,7 +87,7 @@ cd db-SP
 cd 3rdparty/para_customize
 bash parallel_examples/ae.sh
 ```
-to conduct all the experiments and get the overall results. The results will be saved to ./sparge.csv, ./sparge.csv, and ```./sparge.csv```.
+to conduct all the experiments and get the overall results. The results will be saved to ```./sparge.csv```, ```./sparge.csv```, and ```./sparge.csv```.
 
 ## End-to-end test(CogvideoX)
 For baseline with PAROAttention: 
