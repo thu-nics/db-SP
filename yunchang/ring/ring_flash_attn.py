@@ -57,7 +57,7 @@ def ring_flash_attn_forward(
                     v,
                     sparse_part[:,:,:q.shape[-2]//64,:q.shape[-2]//64],
                 )
-                print(f"step{step}, block:{block_out.shape},{block_lse.shape}")
+                # print(f"step{step}, block:{block_out.shape},{block_lse.shape}")
             else:
                 block_out, block_lse = fn(
                     q,

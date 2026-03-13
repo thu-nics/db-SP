@@ -854,7 +854,7 @@ if __name__ == "__main__":
         dtype=dtype,
         requires_grad=True if use_bwd else False,
     )
-    data = torch.load("/root/chensiqi/query_key_value_dict.pt", map_location='cpu', weights_only=True)
+    data = torch.load("/mnt/public/chensiqi/query_key_value_dict.pt", map_location='cpu', weights_only=True)
     q=data['query'].to(device).transpose(1,2).contiguous()[:,:4032*8,:,:]
     k=data['key'].to(device).transpose(1,2).contiguous()[:,:4032*8,:,:]
     v=data['value'].to(device).transpose(1,2).contiguous()[:,:4032*8,:,:]

@@ -1,5 +1,7 @@
+3rdparty
+assets
 build
-profile
+db-SP
 scripts
 test
 yunchang

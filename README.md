@@ -42,7 +42,7 @@ To get uire the result of attention, run the following commands:
 cd db-SP
 bash test/ae.sh
 ```
-The results will be saved to ./attention_speedup_ulysses.csv and ./attention_ring_ulysses.csv.
+The results will be saved to ```./attention_speedup_ulysses.csv``` and ```./attention_ring_ulysses.csv```.
 
 ## End-to-end test(Wan)
 
@@ -87,7 +87,7 @@ cd db-SP
 cd 3rdparty/para_customize
 bash parallel_examples/ae.sh
 ```
-to conduct all the experiments and get the overall results. The results will be saved to ```./sparge.csv```, ```./sparge.csv```, and ```./sparge.csv```.
+to conduct all the experiments and get the overall results. The results will be saved to ```./paro_mask1.csv```, ```./paro_mask2.csv```, ```./paro_mask1_4.csv```, ```./paro_mask2_4.csv``` and ```./sparge.csv```.
 
 ## End-to-end test(CogvideoX)
 For baseline with PAROAttention: 
@@ -126,7 +126,7 @@ cd db-SP
 cd 3rdparty/xdit-customize
 bash examples/ae.sh
 ```
-to conduct all the experiments and get the overall results.
+to conduct all the experiments and get the overall results. The results will be saved to ```./paro_mask1.csv```, ```./paro_mask2.csv```, ```./paro_mask1_4.csv```, ```./paro_mask2_4.csv```.
 
 ## Sparsity-Aware Parallel Strategy Selection
 To get the result of Sparsity-Aware Parallel Strategy Selection, you can run the code below:
@@ -150,9 +150,9 @@ To quantify the effect of using different reusing threshold Ps on the sparse imb
 ```bash
 cd db-SP
 cd 3rdparty/para_customize
-bash parallel_examples/ae.sh
+bash parallel_examples/threshold.sh
 ```
-
+The results will be saved to ```sparge_threshold_count.csv```.
 
 ## Contact us
 If you have any problems during artifacts evaluation, please feel free to contact us by email: chensq23@mails.tsinghua.edu.cn

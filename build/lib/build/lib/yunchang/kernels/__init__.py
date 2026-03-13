@@ -263,7 +263,7 @@ def select_flash_attn_impl(
                 simthreshd1=0.1, 
                 cdfthreshd=0.9, 
                 pvthreshd=100000,
-                tensor_layout="HND",
+                tensor_layout="NHD",
                 return_sparsity=True,
             )
         # if stage == "fwd-only":

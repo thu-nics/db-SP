@@ -156,7 +156,7 @@ class LongContextAttention(torch.nn.Module):
                 query_layer=query_layer.index_select(0, new_row_perm_idx).contiguous()
 
                 #with torch.cuda.stream(comm_stream):
-                dist.all_to_all_single(query_layer,query_layer,transpose_matrix_q_T.tolist(),transpose_matrix_q.tolist(), group=self.ring_pg, async_op=True)
+                dist.all_to_all_single(query_layer,query_layer,transpose_matrix_q_T.tolist(),transpose_matrix_q.tolist(), group=self.ring_pg)# , async_op=True
 
                 #with torch.cuda.stream(compute_stream):
                 key_layer=key_layer.index_select(0, new_col_perm_idx).contiguous()
@@ -164,14 +164,14 @@ class LongContextAttention(torch.nn.Module):
                 # compute_stream.synchronize()
 
                 #with torch.cuda.stream(comm_stream):
-                dist.all_to_all_single(key_layer,key_layer,transpose_matrix_k_T.tolist(),transpose_matrix_k.tolist(), group=self.ring_pg, async_op=True)
+                dist.all_to_all_single(key_layer,key_layer,transpose_matrix_k_T.tolist(),transpose_matrix_k.tolist(), group=self.ring_pg)#, async_op=True
 
                 #with torch.cuda.stream(compute_stream):
                 value_layer=value_layer.index_select(0, new_col_perm_idx).contiguous()
 
                 # compute_stream.synchronize()
                 #with torch.cuda.stream(comm_stream):
-                dist.all_to_all_single(value_layer,value_layer,transpose_matrix_k_T.tolist(),transpose_matrix_k.tolist(), group=self.ring_pg, async_op=True)
+                dist.all_to_all_single(value_layer,value_layer,transpose_matrix_k_T.tolist(),transpose_matrix_k.tolist(), group=self.ring_pg)#, async_op=True
                     
                 # comm_stream.synchronize()
                 query_layer=query_layer.transpose(0,1).reshape(batch_size, seqlen, nheads, d).contiguous()
