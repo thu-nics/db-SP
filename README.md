@@ -1,4 +1,4 @@
-# _db_-SP: Dual-Balanced Sequence Parallelism for Sparse Attention in Visual Generative Models AE
+# _db_-SP: Dual-Balanced Sequence Parallelism for Sparse Attention in Visual Generative Models
 
 [![Paper](https://img.shields.io/badge/Paper-Arxiv-blue)](https://arxiv.org/abs/2511.23113)
 [![Code](https://img.shields.io/badge/Code-GitHub-181717?logo=github&logoColor=white)](https://github.com/thu-nics/db-SP)
@@ -36,15 +36,16 @@ Please download Wan2.1-T2V-14B-Diffusers and CogVideoX1.5-5B for end-to-end test
 
 Please download sparse masks from https://cloud.tsinghua.edu.cn/d/458ccdacdf9c4edf8548/ which is necessary for PAROAttention.
 
-## Attention 
-To get uire the result of attention, run the following commands: 
+## Reproducing results
+### Attention test
+To get the result of attention, run the following commands: 
 ```bash
 cd db-SP
 bash test/ae.sh
 ```
 The results will be saved to ```./attention_speedup_ulysses.csv``` and ```./attention_ring_ulysses.csv```.
 
-## End-to-end test(Wan)
+### End-to-end test(Wan)
 
 To get the end-to-end result of each setting you can run the following commands:
 
@@ -63,7 +64,7 @@ export PYTHONPATH=$PWD:$PYTHONPATH
 torchrun --nproc_per_node=8 parallel_examples/run_wan_sparge.py --sp_ulysses_degree 8 --sp_ring_degree 1 --model_id path/to/Wan2.1-T2V-14B-Diffusers
 ```
 
-For db-SP with PAROAttention: 
+For _db_-SP with PAROAttention: 
 ```bash
 cd db-SP
 cd 3rdparty/para_customize
@@ -71,7 +72,7 @@ export PYTHONPATH=$PWD:$PYTHONPATH
 torchrun --nproc_per_node=8 parallel_examples/run_wan_paro.py --sp_ulysses_degree 8 --sp_ring_degree 1 --sparse_path path/to/sparse_mask --model_id path/to/Wan2.1-T2V-14B-Diffusers --use_db_sp  
 ```
 
-For db-SP with SpargeAttention: 
+For _db_-SP with SpargeAttention: 
 ```bash
 cd db-SP
 cd 3rdparty/para_customize
@@ -89,7 +90,7 @@ bash parallel_examples/ae.sh
 ```
 to conduct all the experiments and get the overall results. The results will be saved to ```./paro_mask1.csv```, ```./paro_mask2.csv```, ```./paro_mask1_4.csv```, ```./paro_mask2_4.csv``` and ```./sparge.csv```.
 
-## End-to-end test(CogvideoX)
+### End-to-end test(CogvideoX)
 For baseline with PAROAttention: 
 ```bash
 cd db-SP
@@ -104,18 +105,18 @@ cd 3rdparty/xdit-customize
 bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus 8 --ulysses_degree 8 --ring_degree 1 
 ```
 
-For db-SP with PAROAttention: 
+For _db_-SP with PAROAttention: 
 ```bash
 cd db-SP
 cd 3rdparty/xdit-customize
 bash examples/run_cogvideo_paro.sh  --model /path/to/CogVideoX1.5-5B --sparse_path /path/to/cogvideo_mask2.pt --n_gpus 8 --ulysses_degree 8 --ring_degree 1 --use_db_sp
 ```
 
-For db-SP with SpargeAttention: 
+For _db_-SP with SpargeAttention: 
 ```bash
 cd db-SP
 cd 3rdparty/xdit-customize
-bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus 8 --ulysses_degree 8 --ring_degree 1 --thereshold 1.0 --use_db_sp
+bash examples/run_cogvideo_sparge.sh  --model /path/to/CogVideoX1.5-5B  --n_gpus 8 --ulysses_degree 8 --ring_degree 1 --threshold 1.0 --use_db_sp
 ```
 
 You can use different sparse_mask which have different sparsity provided to do the experiments. 
@@ -128,8 +129,8 @@ bash examples/ae.sh
 ```
 to conduct all the experiments and get the overall results. The results will be saved to ```./paro_mask1.csv```, ```./paro_mask2.csv```, ```./paro_mask1_4.csv```, ```./paro_mask2_4.csv```.
 
-## Sparsity-Aware Parallel Strategy Selection
-To get the result of Sparsity-Aware Parallel Strategy Selection, you can run the code below:
+### Sparsity-Aware Parallel Strategy Selection
+To get the result of Sparsity-Aware Parallel Strategy Selection, you can run the commands below:
 ```bash
 cd db-SP/db-SP
 torchrun --nproc_per_node=8 selector.py
@@ -139,7 +140,7 @@ If the GPU is limited, you can also run the simulation version with a single GPU
 python selector.py --simulate --n_gpu 8
 ```
 
-## Trade-off analysis
+### Trade-off analysis
 To quantify the effect of the reward factor Rb choice, as depicted in Fig. 12. A trade-off exists between the sparse imbalance ratio and the associated overhead.
 ```bash
 cd db-SP/db-SP
