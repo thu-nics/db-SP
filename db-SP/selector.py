@@ -424,7 +424,7 @@ def main():
         actual_world_size = dist.get_world_size()
         local_rank = int(os.environ.get('LOCAL_RANK', 0))
         torch.cuda.set_device(local_rank)
-        simulate_n_gpu = None 
+        simulate_n_gpu = args.n_gpu
 
     profile_data = {
         'L_all2all': {1: 0, 2: 1.6, 4: 3, 8: 3.6},
